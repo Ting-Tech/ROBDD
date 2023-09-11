@@ -53,8 +53,10 @@ int main()
                 trueCombination.push_back(stateCombination);
             }
 
-            for (size_t j = 0; j < p; j++)
+            for (size_t j = 0, int signCount = 0, int edgeCount = 2; j < p; j++)
             {
+                if (j > pow(2, signCount))
+                    signCount++;
                 for (size_t k = 0; k < 3; k++)
                 {
                     if (i == 0)
@@ -69,10 +71,26 @@ int main()
                     {
                         char variable, elseEdge, thenEdge, comment;
 
+                        variable = (97 + signCount);
+                        if (signCount == i)
+                        {
+                                                }
+                        else
+                        {
+                            elseEdge = edgeCount;
+                            edgeCount++;
+                            thenEdge = edgeCount;
+                            edgeCount++;
+                        }
+                        comment = 'X';
                         sheet.push_back({variable, elseEdge, thenEdge, comment});
                     }
                 }
             }
+        }
+
+        else if (command == ".e")
+        {
         }
 
         else
