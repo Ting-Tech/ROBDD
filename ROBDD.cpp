@@ -1,6 +1,9 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <bitset>
+#include <string>
+
 using namespace std;
 
 int main()
@@ -14,6 +17,7 @@ int main()
     char ob;
     vector<char> ilb;
     vector<vector<char>> sheet;
+    vector<string> logicSheet;
 
     while (true)
     {
@@ -22,9 +26,21 @@ int main()
         if (command == ".i")
         {
             inputFile >> i;
-            for (size_t a = 0; a < pow(2, i); a++)
+            const int bitsize = 8;
+            string logic;
+            for (size_t a = 0; a < pow(2, i + 1); a++) // 製作預設邏輯樹
             {
-                /* code */
+                logic = bitset<bitsize>(a).to_string();
+                int logicLength = logic.length();
+                if (logicLength > i)
+                {
+                    logic.erase(0, logicLength - i);
+                }
+                else if (logicLength < i)
+                {
+                    logic.insert(0, i - logicLength, 0);
+                }
+                logicSheet.push_back(logic);
             }
         }
 
@@ -100,6 +116,11 @@ int main()
 
         else if (command == ".e")
         {
+            for (auto &logic : logicSheet)
+            {
+                cout << logic << endl;
+            }
+            return 0;
         }
 
         else
