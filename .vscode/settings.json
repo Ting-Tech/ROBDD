@@ -3,6 +3,8 @@
         "vector": "cpp",
         "xutility": "cpp",
         "cmath": "cpp",
-        "iostream": "cpp"
+        "iostream": "cpp",
+        "bitset": "cpp",
+        "string_view": "cpp"
     }
 }

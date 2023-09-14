@@ -19,7 +19,7 @@ int main()
     int i = 0, o = 0, p = 0;
     char ob;
     vector<char> ilb;
-    vector<vector<char>> sheet;
+    vector<vector<string>> sheet;
     vector<string> logicSheet;
     vector<vector<char>> trueCombination;
 
@@ -28,7 +28,7 @@ int main()
         string command;
 
         inputFile >> command;
-        cout << command << endl;
+        // cout << command << endl;
 
         if (command == ".i")
         {
@@ -84,7 +84,8 @@ int main()
                 trueCombination.push_back(stateCombination);
             }
             // 製作出表格陣列
-            for (size_t j = 0, signCount = 0, edgeCount = 2; j < pow(2, i) - 1; j++)
+            string edgeCount = "2";
+            for (size_t j = 0, signCount = 0; j < pow(2, i) - 1; j++)
             {
                 if (j > (pow(2, signCount) - 2)) // 判斷是否下一層了
                 {
@@ -101,52 +102,61 @@ int main()
                 // }
                 // else // 中間row的數值
                 // {
-                char variable, elseEdge, thenEdge, comment;
+                string variable, comment;
+                string elseEdge, thenEdge;
 
                 variable = (96 + signCount); // 符號判斷
                 if (signCount == i)
                 {
                     for (size_t c = 0; c < pow(2, i); c++) // 結果判斷
                     {
-                        for (size_t d = 0; d < trueCombination.size(); d++)
+                        for (size_t d = 0; d < trueCombination.size(); d++) // 跟會成立的條件比較
                         {
                             for (size_t e = 0; e < i; e++)
                             {
-                                if ((trueCombination[d][e] != logicSheet[c][e]) && trueCombination[d][e] != '-')
+                                // cout << "{" << trueCombination[d][e] << " " << logicSheet[c][e] << "}";
+                                if (trueCombination[d][e] != '-')
                                 {
-                                    if (c % 2 == 0)
+                                    if ((trueCombination[d][e] != logicSheet[c][e]))
                                     {
-                                        elseEdge = '0';
+                                        if (c % 2 == 0)
+                                        {
+                                            elseEdge = '0';
+                                        }
+                                        else
+                                        {
+                                            thenEdge = '0';
+                                        }
+                                        break;
                                     }
                                     else
                                     {
-                                        thenEdge = '0';
-                                    }
-                                    break;
-                                }
-                                else
-                                {
-                                    if (c % 2 == 0)
-                                    {
-                                        elseEdge = '1';
-                                    }
-                                    else
-                                    {
-                                        thenEdge = '1';
+                                        int num = pow(2, i);
+                                        if (c % 2 == 0)
+                                        {
+                                            elseEdge = to_string(num);
+                                        }
+                                        else
+                                        {
+                                            thenEdge = to_string(num);
+                                        }
                                     }
                                 }
                             }
                         }
+                        // cout << endl;
                     }
                     comment = 'X';
                     sheet.push_back({variable, elseEdge, thenEdge, comment});
                 }
                 else
                 {
-                    elseEdge = edgeCount + 48;
-                    edgeCount++;
-                    thenEdge = edgeCount + 48;
-                    edgeCount++;
+                    elseEdge = edgeCount;
+                    int num = stoi(edgeCount) + 1;
+                    edgeCount = to_string(num);
+                    thenEdge = edgeCount;
+                    int num2 = stoi(edgeCount) + 1;
+                    edgeCount = to_string(num2);
                     comment = 'X';
                     sheet.push_back({variable, elseEdge, thenEdge, comment});
                 }
@@ -166,7 +176,7 @@ int main()
             {
                 for (auto &element : sheets)
                 {
-                    cout << element;
+                    cout << element << " ";
                 }
                 // cout << sheets[0];
                 cout << endl;
