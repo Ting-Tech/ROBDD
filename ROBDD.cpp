@@ -3,6 +3,7 @@
 #include <vector>
 #include <bitset>
 #include <string>
+#include <math.h>
 
 using namespace std;
 
@@ -13,7 +14,7 @@ int main()
 
     string inputStr;
 
-    int i = 0, p = 0, o = 0, p = 0;
+    int i = 0, o = 0, p = 0;
     char ob;
     vector<char> ilb;
     vector<vector<char>> sheet;
@@ -28,7 +29,7 @@ int main()
             inputFile >> i;
             const int bitsize = 8;
             string logic;
-            for (size_t a = 0; a < pow(2, i + 1); a++) // 製作預設邏輯樹
+            for (size_t a = 0; a < (pow(2, i + 1)); a++) // 製作預設邏輯樹
             {
                 logic = bitset<bitsize>(a).to_string();
                 int logicLength = logic.length();
@@ -75,7 +76,7 @@ int main()
                 trueCombination.push_back(stateCombination);
             }
             // 製作出表格陣列
-            for (size_t j = 0, int signCount = 0, int edgeCount = 2; j < p; j++)
+            for (size_t j = 0, signCount = 0, edgeCount = 2; j < p; j++)
             {
                 if (j > pow(2, signCount)) // 判斷是否下一層了
                     signCount++;
