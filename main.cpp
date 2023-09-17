@@ -12,7 +12,7 @@ int main()
     ifstream inputFile;
     ofstream outputFile;
 
-    inputFile.open("test.txt");
+    inputFile.open("test2.txt");
 
     string inputStr;
 
@@ -35,7 +35,7 @@ int main()
             inputFile >> i;
             const int bitsize = 8;
             string logic;
-            for (size_t a = 0; a < (pow(2, i + 1)); a++) // 製作預設邏輯樹
+            for (size_t a = 0; a < (pow(2, i)); a++) // 製作預設邏輯樹
             {
                 logic = bitset<bitsize>(a).to_string();
                 int logicLength = logic.length();
@@ -108,43 +108,47 @@ int main()
                 variable = (96 + signCount); // 符號判斷
                 if (signCount == i)
                 {
-                    for (size_t c = 0; c < pow(2, i); c++) // 結果判斷
+                    for (size_t c = 0; c < 2; c++)
                     {
+                        // cout << trueCombination.size() << endl;
                         for (size_t d = 0; d < trueCombination.size(); d++) // 跟會成立的條件比較
                         {
+                            bool lastResult = true;
+
                             for (size_t e = 0; e < i; e++)
                             {
-                                // cout << "{" << trueCombination[d][e] << " " << logicSheet[c][e] << "}";
-                                if (trueCombination[d][e] != '-')
+                                bool result = true;
+
+                                if (trueCombination[d][e] == '-')
+                                    result = true;
+                                else
                                 {
-                                    if ((trueCombination[d][e] != logicSheet[c][e]))
-                                    {
-                                        if (c % 2 == 0)
-                                        {
-                                            elseEdge = '0';
-                                        }
-                                        else
-                                        {
-                                            thenEdge = '0';
-                                        }
-                                        break;
-                                    }
+                                    if ((trueCombination[d][e] == logicSheet[((j - (pow(2, (i - 1)) - 1)) * 2 + c)][e]))
+                                        result = true;
                                     else
-                                    {
-                                        int num = pow(2, i);
-                                        if (c % 2 == 0)
-                                        {
-                                            elseEdge = to_string(num);
-                                        }
-                                        else
-                                        {
-                                            thenEdge = to_string(num);
-                                        }
-                                    }
+                                        result = false;
                                 }
+                                lastResult = (lastResult && result);
                             }
+                            int index = ((j - (pow(2, (i - 1)) - 1)) * 2 + c);
+                            if (lastResult == true)
+                            {
+                                if ((index % 2) == 0)
+                                    elseEdge = to_string((int)pow(2, i));
+                                else
+                                    thenEdge = to_string((int)pow(2, i));
+                            }
+                            else
+                            {
+                                if ((index % 2) == 0)
+                                    elseEdge = '0';
+                                else
+                                    thenEdge = '0';
+                            }
+                            // cout << endl;
+                            if (lastResult == true)
+                                break;
                         }
-                        // cout << endl;
                     }
                     comment = 'X';
                     sheet.push_back({variable, elseEdge, thenEdge, comment});
@@ -170,8 +174,10 @@ int main()
             // {
             //     cout << logic << endl;
             // }
+
             // cout << sheet.size() << endl;
             // cout << trueCombination.size() << endl;
+
             for (auto &sheets : sheet)
             {
                 for (auto &element : sheets)
