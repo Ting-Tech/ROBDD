@@ -102,6 +102,7 @@ int main()
                         for (size_t d = 0; d < trueCombination.size(); d++) // 跟會成立的條件比較
                         {
                             bool lastResult = true;
+                            int index = ((j - (pow(2, (i - 1)) - 1)) * 2 + c);
 
                             for (size_t e = 0; e < i; e++)
                             {
@@ -111,14 +112,14 @@ int main()
                                     result = true;
                                 else
                                 {
-                                    if ((trueCombination[d][e] == logicSheet[((j - (pow(2, (i - 1)) - 1)) * 2 + c)][e]))
+                                    if ((trueCombination[d][e] ==
+                                         logicSheet[index][e]))
                                         result = true;
                                     else
                                         result = false;
                                 }
                                 lastResult = (lastResult && result);
                             }
-                            int index = ((j - (pow(2, (i - 1)) - 1)) * 2 + c);
                             if (lastResult == true)
                             {
                                 if ((index % 2) == 0)
@@ -157,18 +158,30 @@ int main()
 
         else if (command == ".e")
         {
-            for (size_t a = 1; a < sheet.size(); a++)
+            for (size_t a = 1; a < sheet.size() - 1; a++)
             {
-                for (size_t b = 2 + a; b < sheet.size(); b++)
+                for (size_t b = 1 + a; b < sheet.size() - 1; b++)
                 {
-                    // cout << "{" << sheet[a][1] << "," << sheet[b][1] << "}"
-                    //      << "{" << sheet[a][2] << "," << sheet[b][2] << "}" << endl;
-                    if ((sheet[a][1] == sheet[b][1]) && (sheet[a][2] == sheet[b][2]))
+                    // cout << a << " " << b << endl;
+                    if ((sheet[a][0] == sheet[b][0]) &&
+                        (sheet[a][1] == sheet[b][1]) &&
+                        (sheet[a][2] == sheet[b][2]) &&
+                        (sheet[a][3] != "R") &&
+                        (sheet[a][1] != sheet[a][2]))
                     {
-                        sheet[b][1] = "X";
-                        sheet[b][2] = "X";
                         sheet[b][3] = "R";
+                        sheet[((b / 2))][((b % 2) + 1)] = to_string((int)a);
                     }
+                }
+                for (size_t c = 1; c < sheet.size() - 1; c++)
+                {
+                    if (sheet[c][1] == sheet[c][2])
+                    {
+                        sheet[((c) / 2)][((c) % 2) + 1] = sheet[c][1];
+                        sheet[c][3] = "R";
+                    }
+                    // if (sheet[c][3] == "R")
+                    //     sheet[c].erase(sheet[c].begin(), sheet[c].end());
                 }
             }
 

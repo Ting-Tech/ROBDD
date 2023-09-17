@@ -5,6 +5,7 @@
         "cmath": "cpp",
         "iostream": "cpp",
         "bitset": "cpp",
-        "string_view": "cpp"
+        "string_view": "cpp",
+        "random": "cpp"
     }
 }
