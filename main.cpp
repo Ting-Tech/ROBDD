@@ -157,6 +157,20 @@ int main()
 
         else if (command == ".e")
         {
+            for (size_t a = 1; a < sheet.size(); a++)
+            {
+                for (size_t b = 2 + a; b < sheet.size(); b++)
+                {
+                    // cout << "{" << sheet[a][1] << "," << sheet[b][1] << "}"
+                    //      << "{" << sheet[a][2] << "," << sheet[b][2] << "}" << endl;
+                    if ((sheet[a][1] == sheet[b][1]) && (sheet[a][2] == sheet[b][2]))
+                    {
+                        sheet[b][1] = "X";
+                        sheet[b][2] = "X";
+                        sheet[b][3] = "R";
+                    }
+                }
+            }
 
             // for (auto &logic : logicSheet)
             // {
