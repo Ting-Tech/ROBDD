@@ -84,7 +84,7 @@ int main()
             }
             // 製作出表格陣列
             string edgeCount = "2";
-            sheet.push_back({"0", "X", "X", "0"});
+            sheet.push_back({"X", "X", "X", "0"});
 
             for (size_t j = 0, signCount = 0; j < pow(2, i) - 1; j++)
             {
@@ -193,14 +193,71 @@ int main()
             // cout << sheet.size() << endl;
             // cout << trueCombination.size() << endl;
 
-            for (auto &sheets : sheet)
+            for (int x = 0; x < sheet.size(); x++) // 輸出表格
             {
-                for (auto &element : sheets)
-                {
+                cout << x << " ";
+                for (auto &element : sheet[x])
                     cout << element << " ";
-                }
                 cout << endl;
             }
+
+            // 輸出dot
+            cout << endl
+                 << "digraph ROBDD {" << endl
+                 << "\t{rank=same";
+
+            string lastSign = "a";
+            for (size_t y = 1; y < sheet.size() - 1; y++)
+            {
+                if (sheet[y][3] != "R")
+                {
+                    if (sheet[y][0] == lastSign)
+                        cout << " " << y;
+                    else
+                    {
+                        lastSign = sheet[y][0];
+                        cout << "}" << endl
+                             << "\t{rank=same " << y;
+                    }
+                }
+            }
+            cout << "}" << endl
+                 << endl;
+
+            for (size_t z = 0; z < sheet.size(); z++)
+            {
+                if (z == 0)
+                    cout << "\t0[label=0, shape=box]" << endl;
+                else if (z == (sheet.size() - 1))
+                    cout << "\t" << z << "[label=1, shape=box]" << endl;
+                else
+                {
+                    if (sheet[z][3] != "R")
+                    {
+                        cout << "\t" << z << "[label="
+                             << '"' << sheet[z][0] << '"' << ']' << endl;
+                    }
+                }
+            }
+            cout << endl;
+            for (size_t a = 1; a < sheet.size() - 1; a++)
+            {
+                if (sheet[a][3] != "R")
+                {
+                    for (size_t b = 1; b < 3; b++)
+                    {
+                        cout << "\t" << a << "->" << sheet[a][b]
+                             << "[label=" << '"' << (b - 1) % 2 << '"'
+                             << ", style=";
+                        if (b == 1)
+                            cout << "dotted";
+                        else
+                            cout << "solid";
+                        cout << "]" << endl;
+                    }
+                }
+            }
+            cout << '}' << endl;
             return 0;
         }
 
