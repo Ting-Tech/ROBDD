@@ -28,7 +28,6 @@ int main()
         string command;
 
         inputFile >> command;
-        // cout << command << endl;
 
         if (command == ".i")
         {
@@ -85,23 +84,13 @@ int main()
             }
             // 製作出表格陣列
             string edgeCount = "2";
+            sheet.push_back({"0", "X", "X", "0"});
+
             for (size_t j = 0, signCount = 0; j < pow(2, i) - 1; j++)
             {
                 if (j > (pow(2, signCount) - 2)) // 判斷是否下一層了
-                {
                     signCount++;
-                }
-                // 計算表格數值
-                // if (j == 0) // 第一row數值
-                // {
-                //     sheet.push_back({'0', 'X', 'X', '0'});
-                // }
-                // else if (j == (pow(2, i) - 1)) // 最後一row數值
-                // {
-                //     sheet.push_back({'1', 'X', 'X', '1'});
-                // }
-                // else // 中間row的數值
-                // {
+
                 string variable, comment;
                 string elseEdge, thenEdge;
 
@@ -110,7 +99,6 @@ int main()
                 {
                     for (size_t c = 0; c < 2; c++)
                     {
-                        // cout << trueCombination.size() << endl;
                         for (size_t d = 0; d < trueCombination.size(); d++) // 跟會成立的條件比較
                         {
                             bool lastResult = true;
@@ -145,7 +133,6 @@ int main()
                                 else
                                     thenEdge = '0';
                             }
-                            // cout << endl;
                             if (lastResult == true)
                                 break;
                         }
@@ -164,12 +151,13 @@ int main()
                     comment = 'X';
                     sheet.push_back({variable, elseEdge, thenEdge, comment});
                 }
-                // }
             }
+            sheet.push_back({"1", "X", "X", "1"});
         }
 
         else if (command == ".e")
         {
+
             // for (auto &logic : logicSheet)
             // {
             //     cout << logic << endl;
@@ -184,7 +172,6 @@ int main()
                 {
                     cout << element << " ";
                 }
-                // cout << sheets[0];
                 cout << endl;
             }
             return 0;
