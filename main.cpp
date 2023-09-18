@@ -10,28 +10,25 @@ using namespace std;
 
 int main(int argc, char *argv[])
 {
-    ifstream inputFile;
-    ofstream outputFile;
-
     if (argc != 3)
     {
         cout << "Input fail" << endl;
         return 2;
     }
 
+    ifstream inputFile;
+    ofstream outputFile;
     inputFile.open(argv[1]);
     outputFile.open(argv[2]);
 
+    string line;
     string inputStr;
-
     int i = 0, o = 0, p = 0;
     char ob;
     vector<char> ilb;
     vector<vector<string>> sheet;
     vector<string> logicSheet;
     vector<string> trueCombination;
-
-    string line;
 
     while (getline(inputFile, line))
     {
