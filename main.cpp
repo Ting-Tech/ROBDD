@@ -12,7 +12,7 @@ int main(int argc, char *argv[])
     ifstream inputFile;
     ofstream outputFile;
 
-    if(argc != 3)
+    if (argc != 3)
     {
         cout << "Input fail" << endl;
         return 2;
@@ -213,8 +213,8 @@ int main(int argc, char *argv[])
                  << "digraph ROBDD {" << endl
                  << "\t{rank=same";
 
-                 outputFile >> "digraph ROBDD {" >> endl
-                 >> "\t{rank=same";
+            outputFile << "digraph ROBDD {" << endl
+                       << "\t{rank=same";
 
             string lastSign = "a";
             for (size_t y = 1; y < sheet.size() - 1; y++)
@@ -222,45 +222,52 @@ int main(int argc, char *argv[])
                 if (sheet[y][3] != "R")
                 {
                     if (sheet[y][0] == lastSign)
+                    {
                         cout << " " << y;
-                        outputFile >> " " >> y;
+                        outputFile << " " << y;
+                    }
                     else
                     {
                         lastSign = sheet[y][0];
                         cout << "}" << endl
                              << "\t{rank=same " << y;
 
-                        outputFile >> "}" >> endl
-                             >> "\t{rank=same " >> y;
+                        outputFile << "}" << endl
+                                   << "\t{rank=same " << y;
                     }
                 }
             }
             cout << "}" << endl
                  << endl;
 
-            outputFile >> "}" >> endl >> endl;
+            outputFile << "}" << endl
+                       << endl;
 
             for (size_t z = 0; z < sheet.size(); z++)
             {
                 if (z == 0)
+                {
                     cout << "\t0[label=0, shape=box]" << endl;
-                    outputFile >> "\t0[label=0, shape=box]" >> endl;
+                    outputFile << "\t0[label=0, shape=box]" << endl;
+                }
                 else if (z == (sheet.size() - 1))
+                {
                     cout << "\t" << z << "[label=1, shape=box]" << endl;
-                    outputFile >> "\t" >> z >> "[label=1, shape=box]" >> endl;
+                    outputFile << "\t" << z << "[label=1, shape=box]" << endl;
+                }
                 else
                 {
                     if (sheet[z][3] != "R")
                     {
                         cout << "\t" << z << "[label="
                              << '"' << sheet[z][0] << '"' << ']' << endl;
-                        outputFile >> "\t" >> z >> "[label="
-                            >> '"' >> sheet[z][0] >> '"' >> ']' >> endl;
+                        outputFile << "\t" << z << "[label="
+                                   << '"' << sheet[z][0] << '"' << ']' << endl;
                     }
                 }
             }
             cout << endl;
-            outputFile >> endl;
+            outputFile << endl;
             for (size_t a = 1; a < sheet.size() - 1; a++)
             {
                 if (sheet[a][3] != "R")
@@ -270,22 +277,27 @@ int main(int argc, char *argv[])
                         cout << "\t" << a << "->" << sheet[a][b]
                              << "[label=" << '"' << (b - 1) % 2 << '"'
                              << ", style=";
-                        outputFile >> "\t" >> a >> "->" >> sheet[a][b]
-                             >> "[label=" >> "" >> (b - 1) % 2 >> ""
-                             >> ", style=";
+                        outputFile << "\t" << a << "->" << sheet[a][b]
+                                   << "[label="
+                                   << "" << (b - 1) % 2 << ""
+                                   << ", style=";
                         if (b == 1)
+                        {
                             cout << "dotted";
-                            outputFile >> "dotted"
+                            outputFile << "dotted";
+                        }
                         else
+                        {
                             cout << "solid";
-                            outputFile >> "solid";
+                            outputFile << "solid";
+                        }
                         cout << "]" << endl;
-                        outputFile >> "]" >> endl;
+                        outputFile << "]" << endl;
                     }
                 }
             }
             cout << '}' << endl;
-            outputFile >> '}' >> endl;
+            outputFile << '}' << endl;
             inputFile.close();
             outputFile.close();
             return 0;
