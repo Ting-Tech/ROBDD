@@ -4,6 +4,7 @@
 #include <bitset>
 #include <string>
 #include <math.h>
+#include <sstream>
 
 using namespace std;
 
@@ -28,17 +29,20 @@ int main(int argc, char *argv[])
     vector<char> ilb;
     vector<vector<string>> sheet;
     vector<string> logicSheet;
-    vector<vector<char>> trueCombination;
+    vector<string> trueCombination;
 
-    while (true)
+    string line;
+
+    while (getline(inputFile, line))
     {
         string command;
+        stringstream ss(line);
 
-        inputFile >> command;
+        ss >> command;
 
         if (command == ".i")
         {
-            inputFile >> i;
+            ss >> i;
             const int bitsize = 8;
             string logic;
             for (size_t a = 0; a < (pow(2, i)); a++) // 製作預設邏輯樹
@@ -58,37 +62,31 @@ int main(int argc, char *argv[])
         }
 
         else if (command == ".o")
-            inputFile >> o;
+            ss >> o;
 
         else if (command == ".ilb")
         {
             for (size_t c = 0; c < i; c++)
             {
                 char sign;
-                inputFile >> sign;
+                ss >> sign;
                 ilb.push_back(sign);
             }
         }
 
         else if (command == ".ob")
-            inputFile >> ob;
+            ss >> ob;
 
         else if (command == ".p")
-        {
-            int num = 0;
-            inputFile >> num;
+            ss >> p;
 
-            for (size_t a = 0; a < num; a++) // 讀True的組合
-            {
-                vector<char> stateCombination;
-                for (size_t b = 0; b < (i + o); b++)
-                {
-                    char state;
-                    inputFile >> state;
-                    stateCombination.push_back(state);
-                }
-                trueCombination.push_back(stateCombination);
-            }
+        else if (command[0] == '1' || command[0] == '-' || command[0] == '0')
+        {
+            trueCombination.push_back(command);
+        }
+
+        else if (command == ".e")
+        {
             // 製作出表格陣列
             string edgeCount = "2";
             sheet.push_back({"X", "X", "X", "0"});
@@ -101,7 +99,7 @@ int main(int argc, char *argv[])
                 string variable, comment;
                 string elseEdge, thenEdge;
 
-                variable = (96 + signCount); // 符號判斷
+                variable = ilb[signCount - 1]; // 符號判斷
                 if (signCount == i)
                 {
                     for (size_t c = 0; c < 2; c++)
@@ -161,10 +159,7 @@ int main(int argc, char *argv[])
                 }
             }
             sheet.push_back({"1", "X", "X", "1"});
-        }
 
-        else if (command == ".e")
-        {
             for (size_t a = 1; a < sheet.size() - 1; a++)
             {
                 for (size_t b = 1 + a; b < sheet.size() - 1; b++)
@@ -195,6 +190,15 @@ int main(int argc, char *argv[])
             // for (auto &logic : logicSheet)
             // {
             //     cout << logic << endl;
+            // }
+
+            // for (auto &logics : trueCombination)
+            // {
+            //     for (auto &logic : logics)
+            //     {
+            //         cout << logic;
+            //     }
+            //     cout << endl;
             // }
 
             // cout << sheet.size() << endl;
@@ -303,12 +307,12 @@ int main(int argc, char *argv[])
             return 0;
         }
 
-        else
-        {
-            cout << "Command Error" << endl;
-            inputFile.close();
-            outputFile.close();
-            return 1;
-        }
+        // else
+        // {
+        //     cout << "Command Error" << endl;
+        //     inputFile.close();
+        //     outputFile.close();
+        //     return 1;
+        // }
     }
 }
