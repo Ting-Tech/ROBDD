@@ -7,12 +7,18 @@
 
 using namespace std;
 
-int main()
+int main(int argc, char *argv[])
 {
     ifstream inputFile;
     ofstream outputFile;
 
-    inputFile.open("test2.txt");
+    if(argc != 3)
+    {
+        cout << "Input fail" << endl;
+        return 2;
+    }
+
+    inputFile.open(argv[1]);
 
     string inputStr;
 
