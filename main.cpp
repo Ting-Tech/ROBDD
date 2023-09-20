@@ -215,6 +215,7 @@ void DebugOutput(const vector<string> &logicSheet,
     {
         cout << logic << endl;
     }
+    cout << endl;
 
     cout << "Output true combination:" << endl;
     for (auto &logics : trueCombination)
@@ -225,12 +226,14 @@ void DebugOutput(const vector<string> &logicSheet,
         }
         cout << endl;
     }
+    cout << endl;
 
-    cout << "Sheet size:" << sheet.size() << endl;
-    cout << "Number of true combination "
-         << trueCombination.size() << endl;
+    cout << "Sheet size: " << sheet.size() << endl;
+    cout << "Number of true combination: "
+         << trueCombination.size() << endl
+         << endl;
 
-    cout << "Output Sheet:" << endl;
+    cout << "Output Sheet:";
     for (int x = 0; x < sheet.size(); x++) // 輸出表格
     {
         cout << x << " ";
@@ -238,9 +241,10 @@ void DebugOutput(const vector<string> &logicSheet,
             cout << element << " ";
         cout << endl;
     }
+    cout << endl;
 
     // 輸出dot
-    cout << "Output dot file content:" << endl;
+    cout << "Output dot file content:";
     cout << endl
          << "digraph ROBDD {" << endl
          << "\t{rank=same";
@@ -301,22 +305,12 @@ void DebugOutput(const vector<string> &logicSheet,
     cout << '}' << endl;
 }
 
-int main(int argc, char *argv[])
+void CommendHandler(ifstream &inputFile, ofstream &outputFile,
+                    const bool &debugMode)
 {
-    if (argc != 3)
-    {
-        cout << "Input fail" << endl;
-        return 2;
-    }
-
-    ifstream inputFile;
-    ofstream outputFile;
-    inputFile.open(argv[1]);
-    outputFile.open(argv[2]);
-
-    string line, inputStr;
-    int i = 0, o = 0, p = 0;
     char ob;
+    string line;
+    int i = 0, o = 0, p = 0;
     vector<char> ilb;
     vector<vector<string>> sheet;
     vector<string> logicSheet;
@@ -364,18 +358,38 @@ int main(int argc, char *argv[])
             sheet = InitializeSheet(i, ilb, trueCombination, logicSheet);
             SimplificationSheet(sheet);
             OutputDotFile(outputFile, sheet);
-
-            inputFile.close();
-            outputFile.close();
-            return 0;
         }
 
         else
-        {
-            cout << "Command Error" << endl;
-            inputFile.close();
-            outputFile.close();
-            return 1;
-        }
+            continue;
     }
+    if (debugMode == true)
+        DebugOutput(logicSheet, trueCombination, sheet);
+}
+
+int main(int argc, char *argv[])
+{
+    ifstream inputFile;
+    ofstream outputFile;
+    inputFile.open(argv[1]);
+    outputFile.open(argv[2]);
+
+    if (argc == 3)
+    {
+        CommendHandler(inputFile, outputFile, false);
+    }
+    else if (argc == 4)
+    {
+        if (string(argv[3]) == "debug")
+            CommendHandler(inputFile, outputFile, true);
+    }
+    else
+    {
+        cout << "Input fail" << endl;
+        return 1;
+    }
+
+    inputFile.close();
+    outputFile.close();
+    return 0;
 }
