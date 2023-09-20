@@ -114,6 +114,7 @@ vector<vector<string>> InitializeSheet(int &numOfLogics, const vector<char> &ilb
     return sheet;
 }
 
+// 化簡表個陣列
 void SimplificationSheet(vector<vector<string>> &sheet)
 {
     for (size_t a = 1; a < sheet.size() - 1; a++)
@@ -144,6 +145,7 @@ void SimplificationSheet(vector<vector<string>> &sheet)
     }
 }
 
+// 輸出dot檔案
 void OutputDotFile(ofstream &outputFile, const vector<vector<string>> &sheet)
 {
     outputFile << "digraph ROBDD {" << endl
@@ -206,10 +208,17 @@ void OutputDotFile(ofstream &outputFile, const vector<vector<string>> &sheet)
     outputFile << '}' << endl;
 }
 
+// 輸出debug須知的數值
 void DebugOutput(const vector<string> &logicSheet,
                  const vector<string> &trueCombination,
                  const vector<vector<string>> &sheet)
 {
+    cout << "Sheet size: " << sheet.size() << endl;
+    cout << "Number of true combination: "
+         << trueCombination.size() << endl
+         << endl;
+
+    // 輸出初始邏輯組合
     cout << "Output logic sheet:" << endl;
     for (auto &logic : logicSheet)
     {
@@ -217,6 +226,7 @@ void DebugOutput(const vector<string> &logicSheet,
     }
     cout << endl;
 
+    // 輸出結果為TRUE的邏輯組合
     cout << "Output true combination:" << endl;
     for (auto &logics : trueCombination)
     {
@@ -228,13 +238,9 @@ void DebugOutput(const vector<string> &logicSheet,
     }
     cout << endl;
 
-    cout << "Sheet size: " << sheet.size() << endl;
-    cout << "Number of true combination: "
-         << trueCombination.size() << endl
-         << endl;
-
+    // 輸出表格
     cout << "Output Sheet:";
-    for (int x = 0; x < sheet.size(); x++) // 輸出表格
+    for (int x = 0; x < sheet.size(); x++)
     {
         cout << x << " ";
         for (auto &element : sheet[x])
@@ -243,7 +249,7 @@ void DebugOutput(const vector<string> &logicSheet,
     }
     cout << endl;
 
-    // 輸出dot
+    // 輸出dot資料
     cout << "Output dot file content:";
     cout << endl
          << "digraph ROBDD {" << endl
@@ -282,7 +288,6 @@ void DebugOutput(const vector<string> &logicSheet,
             }
         }
     }
-
     cout << endl;
 
     for (size_t a = 1; a < sheet.size() - 1; a++)
