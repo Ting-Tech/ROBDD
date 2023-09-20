@@ -18,7 +18,8 @@ vector<string> InitializeLogicTree(int &numOfLogics)
     vector<string> logicSheet;
     const int bitsize = 8;
     string logic;
-    for (size_t logicsIndex = 0; logicsIndex < (pow(2, numOfLogics)); logicsIndex++) // 製作預設邏輯樹
+    // 製作預設邏輯樹
+    for (size_t logicsIndex = 0; logicsIndex < (pow(2, numOfLogics)); logicsIndex++)
     {
         logic = bitset<bitsize>(logicsIndex).to_string();
         int logicLength = logic.length();
