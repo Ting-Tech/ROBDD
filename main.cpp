@@ -239,7 +239,7 @@ void DebugOutput(const vector<string> &logicSheet,
     cout << endl;
 
     // 輸出表格
-    cout << "Output Sheet:";
+    cout << "Output Sheet:" << endl;
     for (int x = 0; x < sheet.size(); x++)
     {
         cout << x << " ";
