@@ -114,6 +114,36 @@ vector<vector<string>> InitializeSheet(int &numOfLogics, const vector<char> &ilb
     return sheet;
 }
 
+vector<vector<string>> simplificationSheet(vector<vector<string>> &sheet)
+{
+    for (size_t a = 1; a < sheet.size() - 1; a++)
+    {
+        for (size_t b = 1 + a; b < sheet.size() - 1; b++)
+        {
+            // cout << a << " " << b << endl;
+            if ((sheet[a][0] == sheet[b][0]) &&
+                (sheet[a][1] == sheet[b][1]) &&
+                (sheet[a][2] == sheet[b][2]) &&
+                (sheet[a][3] != "R") &&
+                (sheet[a][1] != sheet[a][2]))
+            {
+                sheet[b][3] = "R";
+                sheet[((b / 2))][((b % 2) + 1)] = to_string((int)a);
+            }
+        }
+        for (size_t c = 1; c < sheet.size() - 1; c++)
+        {
+            if (sheet[c][1] == sheet[c][2])
+            {
+                sheet[((c) / 2)][((c) % 2) + 1] = sheet[c][1];
+                sheet[c][3] = "R";
+            }
+            // if (sheet[c][3] == "R")
+            //     sheet[c].erase(sheet[c].begin(), sheet[c].end());
+        }
+    }
+}
+
 int main(int argc, char *argv[])
 {
     if (argc != 3)
@@ -175,32 +205,6 @@ int main(int argc, char *argv[])
         else if (command == ".e")
         {
             sheet = InitializeSheet(i, ilb, trueCombination, logicSheet);
-            for (size_t a = 1; a < sheet.size() - 1; a++)
-            {
-                for (size_t b = 1 + a; b < sheet.size() - 1; b++)
-                {
-                    // cout << a << " " << b << endl;
-                    if ((sheet[a][0] == sheet[b][0]) &&
-                        (sheet[a][1] == sheet[b][1]) &&
-                        (sheet[a][2] == sheet[b][2]) &&
-                        (sheet[a][3] != "R") &&
-                        (sheet[a][1] != sheet[a][2]))
-                    {
-                        sheet[b][3] = "R";
-                        sheet[((b / 2))][((b % 2) + 1)] = to_string((int)a);
-                    }
-                }
-                for (size_t c = 1; c < sheet.size() - 1; c++)
-                {
-                    if (sheet[c][1] == sheet[c][2])
-                    {
-                        sheet[((c) / 2)][((c) % 2) + 1] = sheet[c][1];
-                        sheet[c][3] = "R";
-                    }
-                    // if (sheet[c][3] == "R")
-                    //     sheet[c].erase(sheet[c].begin(), sheet[c].end());
-                }
-            }
 
             // for (auto &logic : logicSheet)
             // {
