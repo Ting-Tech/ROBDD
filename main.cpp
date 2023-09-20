@@ -12,6 +12,7 @@
 
 using namespace std;
 
+// 製作出初始邏輯組合
 vector<string> InitializeLogicTree(int &numOfLogics)
 {
     vector<string> logicSheet;
@@ -32,6 +33,85 @@ vector<string> InitializeLogicTree(int &numOfLogics)
         logicSheet.push_back(logic);
     }
     return logicSheet;
+}
+
+// 製作出初始表格陣列
+vector<vector<string>> InitializeSheet(int &numOfLogics, const vector<char> &ilb,
+                                       const vector<string> &trueCombination,
+                                       const vector<string> &logicSheet)
+{
+    vector<vector<string>> sheet;
+    string edgeCount = "2";
+    sheet.push_back({"X", "X", "X", "0"});
+
+    for (size_t j = 0, signCount = 0; j < pow(2, numOfLogics) - 1; j++)
+    {
+        if (j > (pow(2, signCount) - 2)) // 判斷是否下一層了
+            signCount++;
+
+        string variable, comment, elseEdge, thenEdge;
+
+        variable = ilb[signCount - 1]; // 符號判斷
+        if (signCount == numOfLogics)
+        {
+            for (size_t c = 0; c < 2; c++)
+            {
+                for (size_t d = 0; d < trueCombination.size(); d++) // 跟會成立的條件比較
+                {
+                    bool lastResult = true;
+                    int index = ((j - (pow(2, (numOfLogics - 1)) - 1)) * 2 + c);
+
+                    for (size_t e = 0; e < numOfLogics; e++)
+                    {
+                        bool result = true;
+
+                        if (trueCombination[d][e] == '-')
+                            result = true;
+                        else
+                        {
+                            if ((trueCombination[d][e] ==
+                                 logicSheet[index][e]))
+                                result = true;
+                            else
+                                result = false;
+                        }
+                        lastResult = (lastResult && result);
+                    }
+                    if (lastResult == true)
+                    {
+                        if ((index % 2) == 0)
+                            elseEdge = to_string((int)pow(2, numOfLogics));
+                        else
+                            thenEdge = to_string((int)pow(2, numOfLogics));
+                    }
+                    else
+                    {
+                        if ((index % 2) == 0)
+                            elseEdge = '0';
+                        else
+                            thenEdge = '0';
+                    }
+                    if (lastResult == true)
+                        break;
+                }
+            }
+            comment = 'X';
+            sheet.push_back({variable, elseEdge, thenEdge, comment});
+        }
+        else
+        {
+            elseEdge = edgeCount;
+            int num = stoi(edgeCount) + 1;
+            edgeCount = to_string(num);
+            thenEdge = edgeCount;
+            int num2 = stoi(edgeCount) + 1;
+            edgeCount = to_string(num2);
+            comment = 'X';
+            sheet.push_back({variable, elseEdge, thenEdge, comment});
+        }
+    }
+    sheet.push_back({"1", "X", "X", "1"});
+    return sheet;
 }
 
 int main(int argc, char *argv[])
@@ -94,78 +174,7 @@ int main(int argc, char *argv[])
 
         else if (command == ".e")
         {
-            // 製作出表格陣列
-            string edgeCount = "2";
-            sheet.push_back({"X", "X", "X", "0"});
-
-            for (size_t j = 0, signCount = 0; j < pow(2, i) - 1; j++)
-            {
-                if (j > (pow(2, signCount) - 2)) // 判斷是否下一層了
-                    signCount++;
-
-                string variable, comment, elseEdge, thenEdge;
-
-                variable = ilb[signCount - 1]; // 符號判斷
-                if (signCount == i)
-                {
-                    for (size_t c = 0; c < 2; c++)
-                    {
-                        for (size_t d = 0; d < trueCombination.size(); d++) // 跟會成立的條件比較
-                        {
-                            bool lastResult = true;
-                            int index = ((j - (pow(2, (i - 1)) - 1)) * 2 + c);
-
-                            for (size_t e = 0; e < i; e++)
-                            {
-                                bool result = true;
-
-                                if (trueCombination[d][e] == '-')
-                                    result = true;
-                                else
-                                {
-                                    if ((trueCombination[d][e] ==
-                                         logicSheet[index][e]))
-                                        result = true;
-                                    else
-                                        result = false;
-                                }
-                                lastResult = (lastResult && result);
-                            }
-                            if (lastResult == true)
-                            {
-                                if ((index % 2) == 0)
-                                    elseEdge = to_string((int)pow(2, i));
-                                else
-                                    thenEdge = to_string((int)pow(2, i));
-                            }
-                            else
-                            {
-                                if ((index % 2) == 0)
-                                    elseEdge = '0';
-                                else
-                                    thenEdge = '0';
-                            }
-                            if (lastResult == true)
-                                break;
-                        }
-                    }
-                    comment = 'X';
-                    sheet.push_back({variable, elseEdge, thenEdge, comment});
-                }
-                else
-                {
-                    elseEdge = edgeCount;
-                    int num = stoi(edgeCount) + 1;
-                    edgeCount = to_string(num);
-                    thenEdge = edgeCount;
-                    int num2 = stoi(edgeCount) + 1;
-                    edgeCount = to_string(num2);
-                    comment = 'X';
-                    sheet.push_back({variable, elseEdge, thenEdge, comment});
-                }
-            }
-            sheet.push_back({"1", "X", "X", "1"});
-
+            sheet = InitializeSheet(i, ilb, trueCombination, logicSheet);
             for (size_t a = 1; a < sheet.size() - 1; a++)
             {
                 for (size_t b = 1 + a; b < sheet.size() - 1; b++)
