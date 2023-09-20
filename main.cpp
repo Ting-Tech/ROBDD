@@ -12,6 +12,28 @@
 
 using namespace std;
 
+vector<string> InitializeLogicTree(int &numOfLogics)
+{
+    vector<string> logicSheet;
+    const int bitsize = 8;
+    string logic;
+    for (size_t logicsIndex = 0; logicsIndex < (pow(2, numOfLogics)); logicsIndex++) // 製作預設邏輯樹
+    {
+        logic = bitset<bitsize>(logicsIndex).to_string();
+        int logicLength = logic.length();
+        if (logicLength > numOfLogics)
+        {
+            logic.erase(0, logicLength - numOfLogics);
+        }
+        else if (logicLength < numOfLogics)
+        {
+            logic.insert(0, numOfLogics - logicLength, 0);
+        }
+        logicSheet.push_back(logic);
+    }
+    return logicSheet;
+}
+
 int main(int argc, char *argv[])
 {
     if (argc != 3)
@@ -25,8 +47,7 @@ int main(int argc, char *argv[])
     inputFile.open(argv[1]);
     outputFile.open(argv[2]);
 
-    string line;
-    string inputStr;
+    string line, inputStr;
     int i = 0, o = 0, p = 0;
     char ob;
     vector<char> ilb;
@@ -44,22 +65,7 @@ int main(int argc, char *argv[])
         if (command == ".i")
         {
             ss >> i;
-            const int bitsize = 8;
-            string logic;
-            for (size_t a = 0; a < (pow(2, i)); a++) // 製作預設邏輯樹
-            {
-                logic = bitset<bitsize>(a).to_string();
-                int logicLength = logic.length();
-                if (logicLength > i)
-                {
-                    logic.erase(0, logicLength - i);
-                }
-                else if (logicLength < i)
-                {
-                    logic.insert(0, i - logicLength, 0);
-                }
-                logicSheet.push_back(logic);
-            }
+            logicSheet = InitializeLogicTree(i);
         }
 
         else if (command == ".o")
@@ -97,8 +103,7 @@ int main(int argc, char *argv[])
                 if (j > (pow(2, signCount) - 2)) // 判斷是否下一層了
                     signCount++;
 
-                string variable, comment;
-                string elseEdge, thenEdge;
+                string variable, comment, elseEdge, thenEdge;
 
                 variable = ilb[signCount - 1]; // 符號判斷
                 if (signCount == i)
