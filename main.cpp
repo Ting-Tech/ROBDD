@@ -114,7 +114,7 @@ vector<vector<string>> InitializeSheet(int &numOfLogics, const vector<char> &ilb
     return sheet;
 }
 
-vector<vector<string>> simplificationSheet(vector<vector<string>> &sheet)
+void SimplificationSheet(vector<vector<string>> &sheet)
 {
     for (size_t a = 1; a < sheet.size() - 1; a++)
     {
@@ -142,6 +142,163 @@ vector<vector<string>> simplificationSheet(vector<vector<string>> &sheet)
             //     sheet[c].erase(sheet[c].begin(), sheet[c].end());
         }
     }
+}
+
+void OutputDotFile(ofstream &outputFile, const vector<vector<string>> &sheet)
+{
+    outputFile << "digraph ROBDD {" << endl
+               << "\t{rank=same";
+    string lastSign = "a";
+    for (size_t y = 1; y < sheet.size() - 1; y++)
+    {
+        if (sheet[y][3] != "R")
+        {
+            if (sheet[y][0] == lastSign)
+                outputFile << " " << y;
+            else
+            {
+                lastSign = sheet[y][0];
+                outputFile << "}" << endl
+                           << "\t{rank=same " << y;
+            }
+        }
+    }
+
+    outputFile << "}" << endl
+               << endl;
+
+    for (size_t z = 0; z < sheet.size(); z++)
+    {
+        if (z == 0)
+            outputFile << "\t0[label=0, shape=box]" << endl;
+        else if (z == (sheet.size() - 1))
+            outputFile << "\t" << z << "[label=1, shape=box]" << endl;
+        else
+        {
+            if (sheet[z][3] != "R")
+            {
+                outputFile << "\t" << z << "[label="
+                           << '"' << sheet[z][0] << '"' << ']' << endl;
+            }
+        }
+    }
+
+    outputFile << endl;
+
+    for (size_t a = 1; a < sheet.size() - 1; a++)
+    {
+        if (sheet[a][3] != "R")
+        {
+            for (size_t b = 1; b < 3; b++)
+            {
+                outputFile << "\t" << a << "->" << sheet[a][b]
+                           << "[label="
+                           << "" << (b - 1) % 2 << ""
+                           << ", style=";
+                if (b == 1)
+                    outputFile << "dotted";
+                else
+                    outputFile << "solid";
+                outputFile << "]" << endl;
+            }
+        }
+    }
+    outputFile << '}' << endl;
+}
+
+void DebugOutput(const vector<string> &logicSheet,
+                 const vector<string> &trueCombination,
+                 const vector<vector<string>> &sheet)
+{
+    cout << "Output logic sheet:" << endl;
+    for (auto &logic : logicSheet)
+    {
+        cout << logic << endl;
+    }
+
+    cout << "Output true combination:" << endl;
+    for (auto &logics : trueCombination)
+    {
+        for (auto &logic : logics)
+        {
+            cout << logic;
+        }
+        cout << endl;
+    }
+
+    cout << "Sheet size:" << sheet.size() << endl;
+    cout << "Number of true combination "
+         << trueCombination.size() << endl;
+
+    cout << "Output Sheet:" << endl;
+    for (int x = 0; x < sheet.size(); x++) // 輸出表格
+    {
+        cout << x << " ";
+        for (auto &element : sheet[x])
+            cout << element << " ";
+        cout << endl;
+    }
+
+    // 輸出dot
+    cout << "Output dot file content:" << endl;
+    cout << endl
+         << "digraph ROBDD {" << endl
+         << "\t{rank=same";
+
+    string lastSign = "a";
+    for (size_t y = 1; y < sheet.size() - 1; y++)
+    {
+        if (sheet[y][3] != "R")
+        {
+            if (sheet[y][0] == lastSign)
+                cout << " " << y;
+            else
+            {
+                lastSign = sheet[y][0];
+                cout << "}" << endl
+                     << "\t{rank=same " << y;
+            }
+        }
+    }
+    cout << "}" << endl
+         << endl;
+
+    for (size_t z = 0; z < sheet.size(); z++)
+    {
+        if (z == 0)
+            cout << "\t0[label=0, shape=box]" << endl;
+        else if (z == (sheet.size() - 1))
+            cout << "\t" << z << "[label=1, shape=box]" << endl;
+        else
+        {
+            if (sheet[z][3] != "R")
+            {
+                cout << "\t" << z << "[label="
+                     << '"' << sheet[z][0] << '"' << ']' << endl;
+            }
+        }
+    }
+
+    cout << endl;
+
+    for (size_t a = 1; a < sheet.size() - 1; a++)
+    {
+        if (sheet[a][3] != "R")
+        {
+            for (size_t b = 1; b < 3; b++)
+            {
+                cout << "\t" << a << "->" << sheet[a][b]
+                     << "[label=" << '"' << (b - 1) % 2 << '"'
+                     << ", style=";
+                if (b == 1)
+                    cout << "dotted";
+                else
+                    cout << "solid";
+                cout << "]" << endl;
+            }
+        }
+    }
+    cout << '}' << endl;
 }
 
 int main(int argc, char *argv[])
@@ -205,133 +362,20 @@ int main(int argc, char *argv[])
         else if (command == ".e")
         {
             sheet = InitializeSheet(i, ilb, trueCombination, logicSheet);
+            SimplificationSheet(sheet);
+            OutputDotFile(outputFile, sheet);
 
-            // for (auto &logic : logicSheet)
-            // {
-            //     cout << logic << endl;
-            // }
-
-            // for (auto &logics : trueCombination)
-            // {
-            //     for (auto &logic : logics)
-            //     {
-            //         cout << logic;
-            //     }
-            //     cout << endl;
-            // }
-
-            // cout << sheet.size() << endl;
-            // cout << trueCombination.size() << endl;
-
-            for (int x = 0; x < sheet.size(); x++) // 輸出表格
-            {
-                cout << x << " ";
-                for (auto &element : sheet[x])
-                    cout << element << " ";
-                cout << endl;
-            }
-
-            // 輸出dot
-            cout << endl
-                 << "digraph ROBDD {" << endl
-                 << "\t{rank=same";
-
-            outputFile << "digraph ROBDD {" << endl
-                       << "\t{rank=same";
-
-            string lastSign = "a";
-            for (size_t y = 1; y < sheet.size() - 1; y++)
-            {
-                if (sheet[y][3] != "R")
-                {
-                    if (sheet[y][0] == lastSign)
-                    {
-                        cout << " " << y;
-                        outputFile << " " << y;
-                    }
-                    else
-                    {
-                        lastSign = sheet[y][0];
-                        cout << "}" << endl
-                             << "\t{rank=same " << y;
-
-                        outputFile << "}" << endl
-                                   << "\t{rank=same " << y;
-                    }
-                }
-            }
-            cout << "}" << endl
-                 << endl;
-
-            outputFile << "}" << endl
-                       << endl;
-
-            for (size_t z = 0; z < sheet.size(); z++)
-            {
-                if (z == 0)
-                {
-                    cout << "\t0[label=0, shape=box]" << endl;
-                    outputFile << "\t0[label=0, shape=box]" << endl;
-                }
-                else if (z == (sheet.size() - 1))
-                {
-                    cout << "\t" << z << "[label=1, shape=box]" << endl;
-                    outputFile << "\t" << z << "[label=1, shape=box]" << endl;
-                }
-                else
-                {
-                    if (sheet[z][3] != "R")
-                    {
-                        cout << "\t" << z << "[label="
-                             << '"' << sheet[z][0] << '"' << ']' << endl;
-                        outputFile << "\t" << z << "[label="
-                                   << '"' << sheet[z][0] << '"' << ']' << endl;
-                    }
-                }
-            }
-            cout << endl;
-            outputFile << endl;
-            for (size_t a = 1; a < sheet.size() - 1; a++)
-            {
-                if (sheet[a][3] != "R")
-                {
-                    for (size_t b = 1; b < 3; b++)
-                    {
-                        cout << "\t" << a << "->" << sheet[a][b]
-                             << "[label=" << '"' << (b - 1) % 2 << '"'
-                             << ", style=";
-                        outputFile << "\t" << a << "->" << sheet[a][b]
-                                   << "[label="
-                                   << "" << (b - 1) % 2 << ""
-                                   << ", style=";
-                        if (b == 1)
-                        {
-                            cout << "dotted";
-                            outputFile << "dotted";
-                        }
-                        else
-                        {
-                            cout << "solid";
-                            outputFile << "solid";
-                        }
-                        cout << "]" << endl;
-                        outputFile << "]" << endl;
-                    }
-                }
-            }
-            cout << '}' << endl;
-            outputFile << '}' << endl;
             inputFile.close();
             outputFile.close();
             return 0;
         }
 
-        // else
-        // {
-        //     cout << "Command Error" << endl;
-        //     inputFile.close();
-        //     outputFile.close();
-        //     return 1;
-        // }
+        else
+        {
+            cout << "Command Error" << endl;
+            inputFile.close();
+            outputFile.close();
+            return 1;
+        }
     }
 }
