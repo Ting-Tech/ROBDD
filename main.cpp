@@ -1,3 +1,7 @@
+// Author: 鄭健廷(B11130225)
+// Last update date: 2023/9/20 16:32
+// Connection: B11130225@mail.ntust.edu.tw
+
 #include <iostream>
 #include <fstream>
 #include <vector>
