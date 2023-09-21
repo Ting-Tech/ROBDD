@@ -13,13 +13,15 @@
 using namespace std;
 
 // 製作出初始邏輯組合
-vector<string> InitializeLogicTree(int &numOfLogics)
+vector<string> initializeLogicTree(int &numOfLogics)
 {
     vector<string> logicSheet;
     const int bitsize = 8;
     string logic;
     // 製作預設邏輯樹
-    for (size_t logicsIndex = 0; logicsIndex < (pow(2, numOfLogics)); logicsIndex++)
+    for (size_t logicsIndex = 0;
+         logicsIndex < (pow(2, numOfLogics));
+         logicsIndex++)
     {
         logic = bitset<bitsize>(logicsIndex).to_string();
         int logicLength = logic.length();
@@ -37,9 +39,10 @@ vector<string> InitializeLogicTree(int &numOfLogics)
 }
 
 // 製作出初始表格陣列
-vector<vector<string>> InitializeSheet(int &numOfLogics, const vector<char> &ilb,
-                                       const vector<string> &trueCombination,
-                                       const vector<string> &logicSheet)
+vector<vector<string>>
+initializeSheet(int &numOfLogics, const vector<char> &ilb,
+                const vector<string> &trueCombination,
+                const vector<string> &logicSheet)
 {
     vector<vector<string>> sheet;
     string edgeCount = "2";
@@ -57,7 +60,8 @@ vector<vector<string>> InitializeSheet(int &numOfLogics, const vector<char> &ilb
         {
             for (size_t c = 0; c < 2; c++)
             {
-                for (size_t d = 0; d < trueCombination.size(); d++) // 跟會成立的條件比較
+                // 跟會成立的條件比較
+                for (size_t d = 0; d < trueCombination.size(); d++)
                 {
                     bool lastResult = true;
                     int index = ((j - (pow(2, (numOfLogics - 1)) - 1)) * 2 + c);
@@ -116,7 +120,7 @@ vector<vector<string>> InitializeSheet(int &numOfLogics, const vector<char> &ilb
 }
 
 // 化簡表個陣列
-void SimplificationSheet(vector<vector<string>> &sheet)
+void simplificationSheet(vector<vector<string>> &sheet)
 {
     for (size_t a = 1; a < sheet.size() - 1; a++)
     {
@@ -147,7 +151,7 @@ void SimplificationSheet(vector<vector<string>> &sheet)
 }
 
 // 輸出dot檔案
-void OutputDotFile(ofstream &outputFile, const vector<vector<string>> &sheet)
+void outputDotFile(ofstream &outputFile, const vector<vector<string>> &sheet)
 {
     outputFile << "digraph ROBDD {" << endl
                << "\t{rank=same";
@@ -210,7 +214,7 @@ void OutputDotFile(ofstream &outputFile, const vector<vector<string>> &sheet)
 }
 
 // 輸出debug須知的數值
-void DebugOutput(const vector<string> &logicSheet,
+void debugOutput(const vector<string> &logicSheet,
                  const vector<string> &trueCombination,
                  const vector<vector<string>> &sheet)
 {
@@ -311,7 +315,7 @@ void DebugOutput(const vector<string> &logicSheet,
     cout << '}' << endl;
 }
 
-void CommendHandler(ifstream &inputFile, ofstream &outputFile,
+void commendHandler(ifstream &inputFile, ofstream &outputFile,
                     const bool &debugMode)
 {
     char ob;
@@ -332,7 +336,7 @@ void CommendHandler(ifstream &inputFile, ofstream &outputFile,
         if (command == ".i")
         {
             ss >> i;
-            logicSheet = InitializeLogicTree(i);
+            logicSheet = initializeLogicTree(i);
         }
 
         else if (command == ".o")
@@ -354,23 +358,25 @@ void CommendHandler(ifstream &inputFile, ofstream &outputFile,
         else if (command == ".p")
             ss >> p;
 
-        else if (command[0] == '1' || command[0] == '-' || command[0] == '0')
+        else if (command[0] == '1' ||
+                 command[0] == '-' ||
+                 command[0] == '0')
         {
             trueCombination.push_back(command);
         }
 
         else if (command == ".e")
         {
-            sheet = InitializeSheet(i, ilb, trueCombination, logicSheet);
-            SimplificationSheet(sheet);
-            OutputDotFile(outputFile, sheet);
+            sheet = initializeSheet(i, ilb, trueCombination, logicSheet);
+            simplificationSheet(sheet);
+            outputDotFile(outputFile, sheet);
         }
 
         else
             continue;
     }
     if (debugMode == true)
-        DebugOutput(logicSheet, trueCombination, sheet);
+        debugOutput(logicSheet, trueCombination, sheet);
 }
 
 int main(int argc, char *argv[])
@@ -382,12 +388,12 @@ int main(int argc, char *argv[])
 
     if (argc == 3)
     {
-        CommendHandler(inputFile, outputFile, false);
+        commendHandler(inputFile, outputFile, false);
     }
     else if (argc == 4)
     {
         if (string(argv[3]) == "debug")
-            CommendHandler(inputFile, outputFile, true);
+            commendHandler(inputFile, outputFile, true);
     }
     else
     {
